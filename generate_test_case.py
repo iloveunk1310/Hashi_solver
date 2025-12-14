@@ -87,7 +87,8 @@ class HashiGenerator:
 
             # Nếu số đảo đi được < tổng số đảo -> Không liên thông -> Generate lại
             if count_visited < valid_islands_count:
-                return self.generate()
+                if random.random() < 0.5: #tạo nhiễu
+                    return self.generate()
 
         return final_grid
 
@@ -97,7 +98,9 @@ class HashiGenerator:
         print("\n")
 
 sizes = [
-    (21,21)
+    (7,7),
+    (9,9),
+    (11,11)
 ]
 
 for i, (h, w) in enumerate(sizes):

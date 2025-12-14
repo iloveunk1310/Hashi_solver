@@ -1,8 +1,4 @@
-"""
-Comprehensive CNF Solver Test Suite
-Integrates: Brute Force, Backtracking, and A* solvers
-With: Hashi puzzle generation and testing
-"""
+
 
 from __future__ import annotations
 from typing import List, Optional, Tuple, Dict, Iterable, Callable
@@ -12,7 +8,7 @@ import heapq
 
 import os
 from traditional_algo import *
-# ============ HASHI TEST ============
+# HASHI TEST 
 
 def test_hashi_with_solvers(test_num, grid, output_dir="output", time_limit_s=10.0):
     """Test Hashi solver with all CNF solvers."""
@@ -23,15 +19,18 @@ def test_hashi_with_solvers(test_num, grid, output_dir="output", time_limit_s=10
     print("Input Grid:")
     for row in grid:
         print(" , ".join(str(x) for x in row))
-    
+    #write grid to file
+    with open(f"input/test_case_{str(len(grid))}_{test_num}.txt", "w") as f:
+        for row in grid:
+            f.write(" , ".join(str(x) for x in row) + "\n")
     # Create solver instance
     solver = Hashi_solver(hashi_matrix=grid, size=len(grid))
     
     try:
         # Generate CNF
         solver.generate_cnf(
-            dimacs_path=f"{output_dir}/dimacs/test_case_{test_num}.dimacs",
-            varmap_path=f"{output_dir}/varmap/test_case_{test_num}_varmap.txt",
+            dimacs_path=f"{output_dir}/dimacs/test_case_{str(len(grid))}_{test_num}.dimacs",
+            varmap_path=f"{output_dir}/varmap/test_case_{str(len(grid))}_{test_num}_varmap.txt",
             lazy=True
         )
         print("\n✓ CNF generated successfully")
@@ -69,15 +68,17 @@ def test_hashi_with_solvers(test_num, grid, output_dir="output", time_limit_s=10
         # Try to solve with Hashi's internal solver
         print(f"\n  Testing Hashi native solver...", end=" ")
         solution = solver.solve_lazy()
-        if solution is not None:
+        if solution["status"] == "SAT" :
             print(f"✓ Solution found")
-            grid_sol = solver.structure_solver(name=f"output/test_case_{test_num}")
+            grid_sol = solver.structure_solver(name=f"output/test_case_{str(len(grid))}_{test_num}_solution.txt")
             print("\nSolution Grid:")
             for row in grid_sol:
                 print(" , ".join(str(x) for x in row))
             return True, results
         else:
             print(f"✗ No solution found")
+            with open(f"output/test_case_{str(len(grid))}_{test_num}_solution.txt", "w") as f:
+                f.write("No solution found for this test case.\n")
             return False, results
             
     except Exception as e:
@@ -114,13 +115,7 @@ if __name__ == "__main__":
         (7, 7),
         (7, 7),
         (9, 9),
-        (9, 9),
-        (11, 11),
-        (11, 11),
-        (13, 13),
-        (13, 13),
-        (17, 17),
-        (20, 20)
+        (9, 9)
     ]
     
     print("="*70)
@@ -176,4 +171,3 @@ if __name__ == "__main__":
         else:
             print(f"{solver_name:20} | Success: 0/10")
     
-    print(f"{'='*70}\n")

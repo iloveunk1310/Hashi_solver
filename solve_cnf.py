@@ -419,7 +419,8 @@ if __name__ == "__main__":
     matrix, n = read_file(path)
     name = path.split('/')[-1].split('.')[0]
     solver = Hashi_solver(hashi_matrix=matrix, size=n)
-    solver.generate_cnf(lazy=False,
+    solver.draw_hashi()
+    solver.generate_cnf(lazy=True,
                                    dimacs_path= "output/dimacs/" + name + "_cnf.dimacs",
                                    varmap_path= "output/varmap/" + name + "_varmap.txt")
     result = solver.solve_lazy(max_iter=500, verbos=50)
